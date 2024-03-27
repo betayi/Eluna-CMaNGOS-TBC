@@ -1292,7 +1292,8 @@ void WorldObject::CleanupsBeforeDelete()
 void WorldObject::Update(const uint32 diff)
 {
 #ifdef BUILD_ELUNA
-    elunaEvents->Update(diff);
+    if (elunaEvents) // can be null on maps without eluna
+        elunaEvents->Update(diff);
 #endif
     m_heartBeatTimer.Update(diff);
     while (m_heartBeatTimer.Passed())
@@ -2088,8 +2089,11 @@ void WorldObject::SetMap(Map* map)
     // in single state, the timed events should move across maps
     if (!sElunaConfig->IsElunaCompatibilityMode())
     {
-        delete elunaEvents;
-        elunaEvents = nullptr; // set to null in case map doesn't use eluna
+        if (elunaEvents)
+        {
+            delete elunaEvents;
+            elunaEvents = nullptr; // set to null in case map doesn't use eluna
+        }
     }
 
     if (Eluna* e = map->GetEluna())
