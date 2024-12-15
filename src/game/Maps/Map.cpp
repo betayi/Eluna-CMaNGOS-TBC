@@ -2393,6 +2393,9 @@ void BattleGroundMap::Update(const uint32& diff)
 {
     Map::Update(diff);
 
+    if (!m_bg)
+        return;
+
     if (!m_bg->GetPlayersSize())
     {
         // BG is empty
